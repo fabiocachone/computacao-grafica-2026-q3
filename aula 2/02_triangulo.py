@@ -1,0 +1,107 @@
+"""
+Primeiro triangulo: VBO, VAO e o par de shaders.
+Único programa do curso com o GLSL embutido em string.
+A partir do 03, os shaders passam a ser gravados em arquivos próprios.
+
+MCCC007-23 - Computação Gráfica - UFABC
+Prof. João Paulo Gois
+
+Executar: python 02_triangulo.py      Sair: ESC ou fechar a janela
+"""
+import sys
+
+import glfw
+import moderngl
+import numpy as np
+
+
+def erro_glfw(codigo, descricao):
+    """Substitui o aviso padrão do pyGLFW: imprime código
+    e descrição de qualquer erro do GLFW em stderr"""
+    print(f"GLFW [{codigo}]: {descricao}", file=sys.stderr)
+
+
+glfw.set_error_callback(erro_glfw)
+
+if not glfw.init():
+    sys.exit("FALHA: glfw nao inicializou")
+
+# Ajuste aqui a versão OpenGL e o perfil do contexto.
+glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 4)
+glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 0)
+glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
+glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
+
+# Alterando largura, altura e título, você muda a aparência da janela.
+janela = glfw.create_window(800, 600, "Olá triângulo", None, None)
+if not janela:
+    glfw.terminate()
+    sys.exit("FALHA: não foi possível criar a janela")
+
+glfw.make_context_current(janela)
+ctx = moderngl.create_context()
+
+# -------------- lado da GPU
+
+VERTEX_SHADER = """
+#version 400 core
+
+layout(location = 0) in vec4 vPosition;
+layout(location = 1) in vec4 vColors;
+
+out vec4 v2fcolor;
+
+void main() {
+    gl_Position = vPosition;
+    v2fcolor = vColors;
+}
+"""
+
+FRAGMENT_SHADER = """
+#version 400 core
+
+in vec4 v2fcolor;
+out vec4 outfragcolor;
+
+void main() {
+    outfragcolor = v2fcolor;
+}
+"""
+
+# O driver compila e liga os dois shaders agora, em tempo de execução.
+prog = ctx.program(vertex_shader=VERTEX_SHADER, fragment_shader=FRAGMENT_SHADER)
+
+# ------------------- lado da CPU
+
+# Dados intercalados: posição (x,y,z,w) e cor (r,g,b,a) de cada vértice,
+# vizinhos na memória. 'f4' é float de 32 bits.
+# Sem dtype, o numpy usa float64 e a GPU leria lixo.
+# Altere estes valores para mover os pontos do triângulo ou mudar as cores.
+vertices = np.array([
+     0.0,  0.5, 0.0, 1.0,   1.0, 0.0, 0.0, 1.0,   # v0 topo, vermelho
+    -0.5, -0.5, 0.0, 1.0,   0.0, 1.0, 0.0, 1.0,   # v1 esquerda, verde
+     0.5, -0.5, 0.0, 1.0,   0.0, 0.0, 1.0, 1.0,   # v2 direita, azul
+], dtype='f4')
+
+# O VBO é memória bruta na VRAM.
+# VAO diz como lê-la. '4f 4f' significa quatro floats
+# para vPosition e quatro para vColors, nessa ordem.
+vbo = ctx.buffer(vertices.tobytes())
+vao = ctx.vertex_array(prog, [(vbo, '4f 4f', 'vPosition', 'vColors')])
+
+while not glfw.window_should_close(janela):
+    if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
+        glfw.set_window_should_close(janela, True)
+
+    # Ajuste a cor de fundo para mudar o fundo da janela (RGBA).
+    ctx.clear(1.0, 1.0, 1.0, 1.0)
+    vao.render(moderngl.TRIANGLES)
+    glfw.swap_buffers(janela)
+    glfw.poll_events()
+
+vao.release()
+vbo.release()
+prog.release()
+glfw.terminate()
+print("Execucao finalizada.")
+
