@@ -32,8 +32,8 @@ glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 0)
 glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
 
-# Alterando largura, altura e título, você muda a aparência da janela.
-janela = glfw.create_window(800, 600, "Olá triângulo", None, None)
+# Estilo personalizado para diferenciar do padrão do slide.
+janela = glfw.create_window(820, 520, "Triângulo do Meu Projeto", None, None)
 if not janela:
     glfw.terminate()
     sys.exit("FALHA: não foi possível criar a janela")
@@ -76,11 +76,11 @@ prog = ctx.program(vertex_shader=VERTEX_SHADER, fragment_shader=FRAGMENT_SHADER)
 # Dados intercalados: posição (x,y,z,w) e cor (r,g,b,a) de cada vértice,
 # vizinhos na memória. 'f4' é float de 32 bits.
 # Sem dtype, o numpy usa float64 e a GPU leria lixo.
-# Altere estes valores para mover os pontos do triângulo ou mudar as cores.
+# Personalização: triangulo mais angular e com cores mais fortes.
 vertices = np.array([
-     0.0,  0.5, 0.0, 1.0,   1.0, 0.0, 0.0, 1.0,   # v0 topo, vermelho
-    -0.5, -0.5, 0.0, 1.0,   0.0, 1.0, 0.0, 1.0,   # v1 esquerda, verde
-     0.5, -0.5, 0.0, 1.0,   0.0, 0.0, 1.0, 1.0,   # v2 direita, azul
+     0.0,  0.55, 0.0, 1.0,   0.95, 0.35, 0.90, 1.0,   # v0 topo, roxo
+    -0.55, -0.45, 0.0, 1.0,   0.20, 0.85, 0.95, 1.0,   # v1 esquerda, ciano
+     0.55, -0.45, 0.0, 1.0,   1.00, 0.65, 0.10, 1.0,   # v2 direita, laranja
 ], dtype='f4')
 
 # O VBO é memória bruta na VRAM.
@@ -93,8 +93,8 @@ while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
-    # Ajuste a cor de fundo para mudar o fundo da janela (RGBA).
-    ctx.clear(1.0, 1.0, 1.0, 1.0)
+    # Fundo pastel para diferenciar do padrão.
+    ctx.clear(0.94, 0.96, 1.0, 1.0)
     vao.render(moderngl.TRIANGLES)
     glfw.swap_buffers(janela)
     glfw.poll_events()

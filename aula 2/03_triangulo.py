@@ -38,8 +38,8 @@ glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 0)
 glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
 
-# Mude a resolução e o nome da janela para customizar a apresentação.
-janela = glfw.create_window(800, 600, "Olá triângulo (dois VBOs)", None, None)
+# Estilo próprio para diferenciar o programa do original.
+janela = glfw.create_window(860, 540, "Triângulo com 2 VBOs - Eu", None, None)
 if not janela:
     glfw.terminate()
     sys.exit("FALHA: não foi possível criar a janela")
@@ -58,17 +58,17 @@ prog = ctx.program(
 # v0 topo
 # v1 esquerda
 # v2 direita
-# Altere estes valores para mover os vértices ou mudar as cores do triângulo.
+# Personalização: geometria mais achatada e cores mais vibrantes.
 posicoes = np.array([
-    0.0,  0.5, 0.0, 1.0,
-   -0.5, -0.5, 0.0, 1.0,
-    0.5, -0.5, 0.0, 1.0,
+    0.0,  0.6, 0.0, 1.0,
+   -0.6, -0.5, 0.0, 1.0,
+    0.6, -0.5, 0.0, 1.0,
 ], dtype='f4')
 
 cores = np.array([
-    1.0, 0.0, 0.0, 1.0,  # v0 vermelho
-    0.0, 1.0, 0.0, 1.0,  # v1 verde
-    0.0, 0.0, 1.0, 1.0,  # v2 azul
+    1.0, 0.55, 0.0, 1.0,  # v0 laranja
+    0.2, 0.8, 1.0, 1.0,  # v1 azul claro
+    0.7, 0.2, 1.0, 1.0,  # v2 roxo
 ], dtype='f4')
 
 vbo_pos = ctx.buffer(posicoes.tobytes())
@@ -84,8 +84,8 @@ while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
-    # Ajuste o fundo para uma cor diferente (RGBA).
-    ctx.clear(1.0, 1.0, 1.0, 1.0)
+    # Fundo cinza azulado para destacar o triângulo.
+    ctx.clear(0.92, 0.94, 0.98, 1.0)
     vao.render(moderngl.TRIANGLES)
     glfw.swap_buffers(janela)
     glfw.poll_events()

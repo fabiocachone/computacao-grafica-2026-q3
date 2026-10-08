@@ -15,23 +15,22 @@ import numpy as np
 
 SHADERS = Path(__file__).parent / "shaders"
 
-# Ajuste aqui os vértices e as cores para alterar a forma do quadrado.
+# Personalização visual para um estilo mais marcante.
 VERTICES = np.array([
-    -0.5, -0.5, 0.0, 1.0,  1.0, 0.0, 0.0, 1.0,  # v0 vermelho
-     0.5, -0.5, 0.0, 1.0,  0.0, 1.0, 0.0, 1.0,  # v1 verde
-     0.5,  0.5, 0.0, 1.0,  0.0, 0.0, 1.0, 1.0,  # v2 azul
-    -0.5,  0.5, 0.0, 1.0,  1.0, 1.0, 0.0, 1.0,  # v3 amarelo
+    -0.5, -0.5, 0.0, 1.0,  1.0, 0.25, 0.30, 1.0,  # v0 coral
+     0.5, -0.5, 0.0, 1.0,  0.25, 0.80, 0.90, 1.0,  # v1 azul
+     0.5,  0.5, 0.0, 1.0,  0.80, 0.30, 1.0, 1.0,  # v2 violeta
+    -0.5,  0.5, 0.0, 1.0,  0.35, 0.90, 0.60, 1.0,  # v3 verde
 ], dtype='f4')
 
 # Os mesmos quatro vértices, triangulados de duas maneiras.
 # Muda só a ordem de leitura; o VBO não é tocado.
-# Troque estes índices para alterar qual diagonal aparece no quadrado.
 DIAGONAL_02 = np.array([0, 1, 2, 2, 3, 0], dtype='u4')
 DIAGONAL_13 = np.array([0, 1, 3, 1, 2, 3], dtype='u4')
 
-# Ajuste a cor do fundo para claro/escuro.
-BRANCO = (1.0, 1.0, 1.0, 1.0)
-PRETO = (0.0, 0.0, 0.0, 1.0)
+# Fundo mais escuro para ter contraste forte.
+BRANCO = (0.96, 0.96, 1.0, 1.0)
+PRETO = (0.08, 0.10, 0.20, 1.0)
 
 
 def erro_glfw(codigo, descricao):
@@ -49,8 +48,8 @@ glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 0)
 glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
 
-# Ajuste aqui o tamanho e o título da janela.
-janela = glfw.create_window(600, 600, "Troca de diagonal", None, None)
+# Estilo personalizado para diferenciar o programa do slide.
+janela = glfw.create_window(620, 620, "Quadrado Alternante - Eu", None, None)
 if not janela:
     glfw.terminate()
     sys.exit("FALHA: nao foi possivel criar a janela")

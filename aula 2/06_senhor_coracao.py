@@ -18,21 +18,23 @@ import numpy as np
 
 SHADERS = Path(__file__).parent / "shaders"
 
-# Ajuste estas constantes para modificar as cores do coração, olhos e fundo.
-MAGENTA = (0.85, 0.10, 0.45, 1.0)
-BRANCO_OLHO = (1.0, 1.0, 1.0, 1.0)
-PRETO = (0.05, 0.05, 0.05, 1.0)
-FUNDO_DIA = (0.96, 0.96, 0.94, 1.0)
-FUNDO_NOITE = (0.05, 0.05, 0.12, 1.0)
+# Personalização visiva para diferenciar o desenho do padrão.
+MAGENTA = (0.82, 0.20, 0.62, 1.0)
+BRANCO_OLHO = (1.0, 0.98, 0.40, 1.0)
+PRETO = (0.08, 0.08, 0.10, 1.0)
+FUNDO_DIA = (0.93, 0.96, 1.0, 1.0)
+FUNDO_NOITE = (0.08, 0.07, 0.18, 1.0)
 
-# Ajuste a escala e a posição dos elementos para deformar o desenho.
-ESCALA_CORPO = 0.62
-ESCALA_OLHO, ESCALA_PUPILA = 0.085, 0.040
-CENTRO_OLHO = (0.17, 0.20)  # afastamento do eixo e altura de cada olho
+# Escala e posição com visual mais marcante.
+ESCALA_CORPO = 0.68
+ESCALA_OLHO, ESCALA_PUPILA = 0.095, 0.045
+CENTRO_OLHO = (0.18, 0.22)
 
 # Até onde a pupila pode sair do centro do olho, sem escapar do branco.
 LIMITE_OLHAR = ESCALA_OLHO - ESCALA_PUPILA
 PASSO_OLHAR = LIMITE_OLHAR / 2.0
+OLHAR_DIA = (0.0, 0.0)
+OLHAR_NOITE = (-PASSO_OLHAR, PASSO_OLHAR)
 
 
 def leque(x, y):
@@ -74,8 +76,8 @@ glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
 glfw.window_hint(glfw.SAMPLES, 4)
 glfw.window_hint(glfw.RESIZABLE, False)
 
-# Ajuste a resolução e o nome da janela para personalizar a apresentação.
-janela = glfw.create_window(640, 640, "Senhor Coração", None, None)
+# Janela personalizadac para um visual mais próprio.
+janela = glfw.create_window(700, 700, "Meu Senhor Coração", None, None)
 if not janela:
     glfw.terminate()
     sys.exit("FALHA: não foi possível criar a janela")
@@ -111,8 +113,9 @@ def tecla(window, key, scancode, action, mods):
     if key == glfw.KEY_ESCAPE:
         glfw.set_window_should_close(window, True)
     elif key == glfw.KEY_D:
-        # Tecla D: troca entre tema dia/noite.
+        # Tecla D: troca o tema e muda a direção para onde as pupilas olham.
         noite = not noite
+        olhar_x, olhar_y = OLHAR_NOITE if noite else OLHAR_DIA
     elif key in (glfw.KEY_LEFT, glfw.KEY_RIGHT, glfw.KEY_UP, glfw.KEY_DOWN):
         # Ajuste os valores do passo para mover a pupila com mais/menos velocidade.
         dx = {glfw.KEY_LEFT: -1.0, glfw.KEY_RIGHT: 1.0}.get(key, 0.0)

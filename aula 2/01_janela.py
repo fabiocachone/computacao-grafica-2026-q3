@@ -31,8 +31,8 @@ glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 # Para funcionar em MacOS, é necessário habilitar o forward compatibility
 glfw.window_hint(glfw.OPENGL_FORWARD_COMPAT, glfw.TRUE)
 
-# Ajuste aqui a largura, a altura e o título da janela.
-janela = glfw.create_window(800, 600, "Janela e contexto OpenGL", None, None)
+# Estilo personalizado para diferenciar do padrão.
+janela = glfw.create_window(900, 540, "Janela de Estudo - Eu", None, None)
 if not janela:
     glfw.terminate()
     sys.exit("FALHA: não foi possível criar a janela")
@@ -52,8 +52,8 @@ while not glfw.window_should_close(janela):
     if glfw.get_key(janela, glfw.KEY_ESCAPE) == glfw.PRESS:
         glfw.set_window_should_close(janela, True)
 
-    # Troque os 4 valores para alterar a cor de fundo (RGBA).
-    ctx.clear(1.0, 1.0, 1.0, 1.0)
+    # Estilo próprio: fundo azul-violeta para marcar o projeto.
+    ctx.clear(0.22, 0.62, 0.88, 1.0)
     glfw.swap_buffers(janela)
     glfw.poll_events()
 
